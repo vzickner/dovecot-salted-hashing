@@ -23,7 +23,10 @@
 #define MYSQL_QUERY		"SELECT `password` FROM `fe_users` WHERE `username` = '%s' LIMIT 1"
 #define MAX_LENGTH_OF_DATA	256
 #define ENABLE_MD5
+#define ENABLE_LOGGING		1
+#define LOGFILE			"/var/log/checkpassword.log"
 
 int readUserData(char *username, char *password, int maxLength);
 int proveUserData(char *username, char *password, int maxLength);
 char *md5enc(char *text, int length);
+int logMessage(char *message);

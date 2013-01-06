@@ -36,29 +36,35 @@ int main(int argc, char **argv) {
 	char *correctPassword = (char *)malloc(maxLength * sizeof(char));
 	char *encryptedPassword;
 
+
 	if (argc < 2) {
+		logMessage("ERR: Argument is missing");
 		return 2;
 	}
 
 	// Read data from dovecot
 	if (readUserData(username, password, maxLength) < 2) {
+		logMessage("ERR: Reading account data failed");
 		return 2;
 	}
 
 	// Check data against mysql
 	if (proveUserData(username, correctPassword, maxLength) != 0) {
+		logMessage("ERR: Database connection or SQL error.");
 		return 1;
 	}
 
 #ifdef ENABLE_MD5
-	if (correctPassword[0] == '$') {
+	if (index(correctPassword, '$') != NULL) {
 #endif
 		// Encrypt password from user, use correct password as configuration (salt)
 		encryptedPassword = crypt(password, correctPassword);
+		logMessage("INFO: Password is salted");
 #ifdef ENABLE_MD5
 	} else {
 		// Encrypt password from user as md5
 		encryptedPassword = md5enc(password, strlen(password));
+		logMessage("INFO: Password is md5 hash");
 	}
 #endif
 
@@ -77,11 +83,13 @@ int main(int argc, char **argv) {
 				exit(0);
 			default:
 				wait(&status);
+				logMessage("INFO: Login success");
 				break;
 		}
 		return 0;
 	}
         
+	logMessage("ERR: Authentication failed");
 	return 1;
 }
 
@@ -185,5 +193,14 @@ char *md5enc(char *text, int length) {
 	}
 	encrypted[2*MD5_DIGEST_LENGTH] = '\0';
 	return encrypted;
+}
+#endif
+
+#ifdef ENABLE_LOGGING
+int logMessage(char *message) {
+	FILE *log = fopen(LOGFILE, "a"); 
+	fputs(message, log);
+	fputc('\n', log);
+	fclose(log);
 }
 #endif
