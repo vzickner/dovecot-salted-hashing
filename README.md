@@ -7,6 +7,8 @@ by Valentin Zickner
 <zickner(at)querformatik(dot)de>
 
 Important
+---------
+
 Please use MD5-CRYPT if you only have salted passwords. This programm is only
 for compatiblity. It allows md5-hashes, md5-hashes salted and md5 salted-hashes.
 
@@ -24,8 +26,8 @@ Configure this program in checkpassword.h and compile it with "make all".
 
 Then you can configure dovecot to use this hashing programm by adding
 following to your auth section:
-<MTMarkdownOptions output='raw'>
+<em>
   passdb checkpassword {
      args = /path/to/checkpassword
   }
-</MTMarkdownOptions>
+</em>
