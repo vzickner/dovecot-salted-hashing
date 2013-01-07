@@ -55,6 +55,15 @@ int main(int argc, char **argv) {
 	}
 
 #ifdef ENABLE_MD5
+	// Salted MD5 hashs
+	if (strlen(correctPassword) > 2 &&
+		correctPassword[0] == 'M' &&
+		correctPassword[1] == '$') {
+		encryptedPassword = md5enc(password, strlen(password));
+		logMessage("INFO: Password is salted md5 hash");
+		password = encryptedPassword;
+	}
+
 	if (index(correctPassword, '$') != NULL) {
 #endif
 		// Encrypt password from user, use correct password as configuration (salt)
