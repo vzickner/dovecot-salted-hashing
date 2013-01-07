@@ -62,6 +62,7 @@ int main(int argc, char **argv) {
 		encryptedPassword = md5enc(password, strlen(password));
 		logMessage("INFO: Password is salted md5 hash");
 		password = encryptedPassword;
+		correctPassword++; // Remove 'M'
 	}
 
 	if (index(correctPassword, '$') != NULL) {
